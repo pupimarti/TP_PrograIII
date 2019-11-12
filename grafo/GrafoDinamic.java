@@ -242,47 +242,39 @@ public class GrafoDinamic implements TDAGrafo {
 			return menor;
 		}
 		
-		@SuppressWarnings("unchecked")
-		public void PRIM(int v, Vector<NodoArista> noUtilizadas) {
+		public void PRIM(int v, Vector<NodoArista> noUtilizadas, boolean repitiendo) {
 			// TODO Auto-generated method stub
-			NodoGrafo aux = encontrarNodo(v);
+			NodoGrafo aux = encontrarNodo(v);//encuentro nodo
 			NodoArista menor = null;
-			Vector<NodoArista> aristas = null;
-			boolean repitiendo = aux.marcado;
-			
-			if(repitiendo) {
-				menor = devolverMenorSinMarcar(noUtilizadas);
-				aristas = (Vector<NodoArista>)noUtilizadas.clone();
-			}else {
-				aux.marcado = true;
-				aristas = adyacenciasNodo(aux.valor);
-				menor = devolverMenorSinMarcar(aristas);
-			}
+
+			Vector<NodoArista> aristas = adyacenciasNodo(aux.valor); //Si no esta repitiendo las aristas son las adyacencias
+			if(repitiendo) 
+				aristas.addAll(noUtilizadas);//Si esta repitiendo las le sumo noUtilizadas a aristas
+
+			aux.marcado = true;	 //marco el nodo
+			menor = devolverMenorSinMarcar(aristas); //Obtengo del arreglo aristas el menor sin marcar que apunte a nodo sin marcar 
 			
 			if(menor != null) {
-				menor.marcado = true;
+				menor.marcado = true; //Si hay menor lo marco
 				
-			if(!repitiendo) {
 				if(noUtilizadas == null) {
-					noUtilizadas = new Vector<NodoArista>();
+					noUtilizadas = new Vector<NodoArista>(); 
 				}
-				
-				
 				for(NodoArista arista : aristas) {
-					if(arista.marcado == false)
-						noUtilizadas.add(arista);
-				}
-			}
+					if(arista.marcado == false && !noUtilizadas.contains(arista))//Si la arista no esta marcada y noUtilizadas no contiene esta arista
+						noUtilizadas.add(arista);//agrego la arista
+					}
+				if(!repitiendo)
+					noUtilizadas.remove(menor); //Si estoy repitiendo remuevo la arista de noUtilizadas
 				
 				
 				System.out.println("De:" +menor.origen+ " A: " +menor.apunta.valor + ". Peso: "+menor.peso);
 				
-				
-				PRIM(menor.apunta.valor, noUtilizadas);
+				PRIM(menor.apunta.valor, noUtilizadas, repitiendo);
 			}else {
 				menor = devolverMenorSinMarcar(noUtilizadas);
 				if(menor != null)
-					PRIM(menor.origen, noUtilizadas);
+					PRIM(menor.origen, noUtilizadas, true);
 			}
 			return;
 		}
