@@ -6,8 +6,8 @@ public class NodoArista implements Comparable<NodoArista>{
 	int peso;
 	NodoArista sig;
 	NodoGrafo apunta;
-	boolean Visitado;
 	int origen;
+	boolean marcado;
 	
 	public int compareTo(NodoArista aux) {
 		if(this.peso < aux.peso) {

@@ -45,7 +45,6 @@ public class GrafoDinamic implements TDAGrafo {
 				aux.valor = v;
 				aux.lista = null;
 				aux.sig = nodo;
-				aux.Visitado = false;
 				aux.marcado = false;
 				nodo = aux;
 				cantidad++;
@@ -64,10 +63,17 @@ public class GrafoDinamic implements TDAGrafo {
 				NodoArista aux = new NodoArista();
 				aux.origen = v1;
 				aux.peso = peso;
-				aux.Visitado = false;
 				aux.apunta = this.encontrarNodo(v2);
 				aux.sig = encontrarNodo(v1).lista;
+				aux.marcado = false;
 				encontrarNodo(v1).lista = aux; 
+				NodoArista aux2 = new NodoArista();
+				aux2.origen = v2;
+				aux2.peso = peso;
+				aux2.apunta = this.encontrarNodo(v1);
+				aux2.sig = encontrarNodo(v2).lista;
+				aux2.marcado = false;
+				encontrarNodo(v2).lista = aux2; 
 			}else {
 				System.out.println("No existe alguino de los nodos");
 			}
@@ -206,6 +212,79 @@ public class GrafoDinamic implements TDAGrafo {
 				result[j] = ady[j];
 			}
 			return result;
+		}
+		public Vector<NodoArista> adyacenciasNodo(int v1) {
+			NodoGrafo aux = encontrarNodo(v1);
+			NodoArista arista = aux.lista;
+			Vector<NodoArista> aristas = new Vector<NodoArista>();
+			while(arista != null && arista.origen == v1) {
+				aristas.add(arista);
+				arista = arista.sig;
+			}
+			return aristas;
+		}
+		
+		private NodoArista devolverMenorSinMarcar(Vector<NodoArista> aristas) {
+			
+			NodoArista menor = null;
+			NodoGrafo grafo = null;
+			for(NodoArista arista : aristas) {
+				grafo = encontrarNodo(arista.origen);
+				if(grafo.marcado) {
+					if(!arista.apunta.marcado && menor == null) {
+						menor = arista;
+					}else if(!arista.apunta.marcado){
+						if(arista.peso < menor.peso)
+							menor = arista;
+					}
+				}
+			}
+			return menor;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public void PRIM(int v, Vector<NodoArista> noUtilizadas) {
+			// TODO Auto-generated method stub
+			NodoGrafo aux = encontrarNodo(v);
+			NodoArista menor = null;
+			Vector<NodoArista> aristas = null;
+			boolean repitiendo = aux.marcado;
+			
+			if(repitiendo) {
+				menor = devolverMenorSinMarcar(noUtilizadas);
+				aristas = (Vector<NodoArista>)noUtilizadas.clone();
+			}else {
+				aux.marcado = true;
+				aristas = adyacenciasNodo(aux.valor);
+				menor = devolverMenorSinMarcar(aristas);
+			}
+			
+			if(menor != null) {
+				menor.marcado = true;
+				
+			if(!repitiendo) {
+				if(noUtilizadas == null) {
+					noUtilizadas = new Vector<NodoArista>();
+				}
+				
+				
+				for(NodoArista arista : aristas) {
+					if(arista.marcado == false)
+						noUtilizadas.add(arista);
+				}
+			}
+				
+				
+				System.out.println("De:" +menor.origen+ " A: " +menor.apunta.valor + ". Peso: "+menor.peso);
+				
+				
+				PRIM(menor.apunta.valor, noUtilizadas);
+			}else {
+				menor = devolverMenorSinMarcar(noUtilizadas);
+				if(menor != null)
+					PRIM(menor.origen, noUtilizadas);
+			}
+			return;
 		}
 
 }
