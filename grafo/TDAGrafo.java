@@ -32,6 +32,8 @@ public interface TDAGrafo {
 	
 	public int[] dephtFirstSearch(int v1, Vector<Integer> visitados);
 	
-	public void PRIM(int v, Vector<NodoArista> noUtilizadas);
+	public void PRIM(int v, Vector<NodoArista> noUtilizadas, boolean repitiendo);
+	
+	public Vector<NodoArista> Dijkstra(int v1, int v2);
 	
 }

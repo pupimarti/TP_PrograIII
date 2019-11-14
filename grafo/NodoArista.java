@@ -19,7 +19,16 @@ public class NodoArista implements Comparable<NodoArista>{
 		}
 	}
 	
-		
+	public int getPeso() {
+		return peso;
+	}
 	
+	public int getDesde() {
+		return origen;
+	}
+	
+	public int getHasta() {
+		return apunta.valor;
+	}
 
 }

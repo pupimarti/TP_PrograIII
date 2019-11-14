@@ -278,5 +278,71 @@ public class GrafoDinamic implements TDAGrafo {
 			}
 			return;
 		}
+		
+		public Vector<NodoArista> Dijkstra(int v1, int v2){
+			NodoGrafo aux1 = encontrarNodo(v1);
+			
+			aux1.marcado = true;
+			
+			Vector<NodoArista> ady = adyacenciasNodo(v1);
+			
+			Vector<NodoArista> menor = null;
+			
+			for(NodoArista arista : ady) {
+				if(!arista.marcado && !arista.apunta.marcado) {
+					if(arista.apunta.valor == v2) {
+						menor = new Vector<NodoArista>();
+						menor.add(arista);
+						arista.marcado = false;
+						return menor;
+					}
+					arista.marcado = true;
+					Vector<NodoArista> aux = Dijkstra(arista.apunta.valor, v2);
+					if(menor == null && aux != null) {
+						menor = new Vector<NodoArista>();
+						menor = aux;
+						menor.add(arista);
+					}else if(sumaAristas(aux) <= sumaAristas(menor)) {
+						if(aux != null) {
+							menor = aux;
+							menor.add(arista);
+						}
+					}
+					if(aux != null) {
+						for(NodoArista a : aux) 
+							a.marcado = false;
+					}
+					aux1.marcado = false;
+				}
+			}
+			return menor;
+		}
+		
+		private int sumaAristas(Vector<NodoArista> vector) {
+			int suma = 0;
+			if(vector != null) {
+				for(NodoArista a : vector) 
+					suma += a.peso;
+			}
+			return suma;
+		}
+		
+		private NodoArista devolverAristasSinUsar(Vector<NodoArista> aristas) {
+			
+			NodoArista menor = null;
+			NodoGrafo grafo = null;
+			for(NodoArista arista : aristas) {
+				grafo = encontrarNodo(arista.origen);
+				if(grafo.marcado) {
+					if(!arista.apunta.marcado && menor == null) {
+						menor = arista;
+					}else if(!arista.apunta.marcado){
+						if(arista.peso < menor.peso)
+							menor = arista;
+					}
+				}
+			}
+			return menor;
+		}
 
 }
