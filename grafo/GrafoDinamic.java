@@ -280,42 +280,45 @@ public class GrafoDinamic implements TDAGrafo {
 		}
 		
 		public Vector<NodoArista> Dijkstra(int v1, int v2){
-			NodoGrafo aux1 = encontrarNodo(v1);
+			NodoGrafo aux1 = encontrarNodo(v1);	//Encuentro el nodo que arranca
 			
-			aux1.marcado = true;
+			aux1.marcado = true;	//Lo marco
+			//System.out.println("Marco grafo "+v1);
 			
-			Vector<NodoArista> ady = adyacenciasNodo(v1);
+			Vector<NodoArista> ady = adyacenciasNodo(v1);	//Obtengo las aristas adyacentes
 			
-			Vector<NodoArista> menor = null;
+			Vector<NodoArista> menor = null;	//menor guarda el camino más corto que se encontro desde las aristas adyacentes
 			
-			for(NodoArista arista : ady) {
-				if(!arista.marcado && !arista.apunta.marcado) {
-					if(arista.apunta.valor == v2) {
-						menor = new Vector<NodoArista>();
-						menor.add(arista);
-						arista.marcado = false;
-						return menor;
+			for(NodoArista arista : ady) {	//recorro todas las aristas adyacentes
+				if(!arista.marcado && !arista.apunta.marcado) {	//si la arista no está marcada y el nodo donde apunta tampoco
+					if(arista.apunta.valor == v2) {		//si la arista apunta a v2 es condicion de corte.
+						menor = new Vector<NodoArista>();	//inicializo menor
+						menor.add(arista);	//agrego la arista a menor
+						continue;	//paso a la sig adyacencia por si hay otro camino más corto
 					}
-					arista.marcado = true;
-					Vector<NodoArista> aux = Dijkstra(arista.apunta.valor, v2);
-					if(menor == null && aux != null) {
-						menor = new Vector<NodoArista>();
-						menor = aux;
-						menor.add(arista);
-					}else if(sumaAristas(aux) <= sumaAristas(menor)) {
-						if(aux != null) {
-							menor = aux;
-							menor.add(arista);
+					
+					arista.marcado = true;	//marco la arista
+					//System.out.println("Marco arista de " + arista.origen + " a " + arista.apunta.valor + ". Con:"+arista.peso);
+					Vector<NodoArista> aux = Dijkstra(arista.apunta.valor, v2);	//recursividad al grafo que apunta la arista
+					if(aux != null) { //si aux no es null
+						aux.add(arista); //le agrego esta arista
+						if(menor == null) {	//si menor es null 
+							menor = new Vector<NodoArista>();	//inicializo menor
+							menor = aux;	//lo igualo a aux
+						}else if(sumaAristas(aux) <= sumaAristas(menor)) //si existe menor y aux es mas chico que menor
+								menor = aux;
+						for(NodoArista a : aux) { //desmarco las aristas marcadas
+							if(a.marcado) {
+								a.marcado = false;
+								//System.out.println("Desmarco arista de " + a.origen + " a " + a.apunta.valor + ". Con:"+a.peso);
+							}
 						}
 					}
-					if(aux != null) {
-						for(NodoArista a : aux) 
-							a.marcado = false;
-					}
-					aux1.marcado = false;
 				}
 			}
-			return menor;
+			aux1.marcado = false; //desmarco el grafo donde estoy
+			//System.out.println("Desmarco grafo "+v1);
+			return menor; //retorno el menor
 		}
 		
 		private int sumaAristas(Vector<NodoArista> vector) {
@@ -325,24 +328,6 @@ public class GrafoDinamic implements TDAGrafo {
 					suma += a.peso;
 			}
 			return suma;
-		}
-		
-		private NodoArista devolverAristasSinUsar(Vector<NodoArista> aristas) {
-			
-			NodoArista menor = null;
-			NodoGrafo grafo = null;
-			for(NodoArista arista : aristas) {
-				grafo = encontrarNodo(arista.origen);
-				if(grafo.marcado) {
-					if(!arista.apunta.marcado && menor == null) {
-						menor = arista;
-					}else if(!arista.apunta.marcado){
-						if(arista.peso < menor.peso)
-							menor = arista;
-					}
-				}
-			}
-			return menor;
 		}
 
 }
