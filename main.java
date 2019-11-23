@@ -26,9 +26,10 @@ public class main {
 		arbol.agregarArista(3, 2, 5);
 		arbol.agregarArista(6, 4, 2);
 		System.out.println("DFS:");
-		arbol.dephtFirstSearch(1, null);	
+		arbol.dephtFirstSearch(1);	
 		System.out.println();
 		System.out.println();
+		
 	arbol = new GrafoDinamic();
 		arbol.agregarVertice(1);
 		arbol.agregarVertice(2);
