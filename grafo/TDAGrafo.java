@@ -30,7 +30,7 @@ public interface TDAGrafo {
 	
 	public void imparAristas();
 	
-	public int[] dephtFirstSearch(int v1, Vector<Integer> visitados);
+	public int[] dephtFirstSearch(int v1);
 	
 	public void PRIM(int v, Vector<NodoArista> noUtilizadas, boolean repitiendo);
 	

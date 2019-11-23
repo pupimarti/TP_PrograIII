@@ -171,32 +171,22 @@ public class GrafoDinamic implements TDAGrafo {
 			return null;
 		}
 
-		public int[] dephtFirstSearch(int v1, Vector<Integer> visitados) {
-			NodoGrafo aux = encontrarNodo(v1);
-			int[] vector_ady = adyacencias(aux.valor);
-			if(visitados == null) {
-				visitados = new Vector<Integer>();
-			}
-			visitados.add(v1);
-			if(vector_ady != null) {
-				for(int i = vector_ady.length - 1; i >= 0 ; i--) {
-					if(!existeEnVisitados(vector_ady[i], visitados))
-						dephtFirstSearch(vector_ady[i], visitados);
+		public int[] dephtFirstSearch(int v1) {
+			NodoGrafo aux = encontrarNodo(v1);	//encuentra nodo
+			int[] vector_ady = adyacencias(v1);	//obtengo adyacencias
+			
+			aux.marcado = true;	//marco nodo
+			
+			if(vector_ady != null) {	//si hay adyacencias
+				for(int i = vector_ady.length - 1; i >= 0 ; i--) {	//bucle a las adyacencias
+					if(!encontrarNodo(vector_ady[i]).marcado)	//si la adyacencia no esta marcada
+						dephtFirstSearch(vector_ady[i]);	
 				}
 			}
 			System.out.println(v1);
 			
 			return null;
 		}
-		
-		public boolean existeEnVisitados(int v, Vector<Integer> visitados) {
-				for(Integer t : visitados) {
-					if(t == v)
-						return true;
-				}
-			return false;
-		}
-		
 		public int[] adyacencias(int v1) {
 			NodoGrafo aux = encontrarNodo(v1);
 			NodoArista arista = aux.lista;
