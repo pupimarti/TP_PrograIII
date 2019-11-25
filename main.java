@@ -16,15 +16,14 @@ public class main {
 		arbol.agregarVertice(5);
 		arbol.agregarVertice(6);
 		arbol.agregarVertice(7);
+		arbol.agregarVertice(8);
 		arbol.agregarArista(1, 2, 4);
-		arbol.agregarArista(1, 5, 5);
 		arbol.agregarArista(1, 3, 8);
 		arbol.agregarArista(2, 7, 9);
 		arbol.agregarArista(2, 4, 2);
 		arbol.agregarArista(2, 5, 7);
 		arbol.agregarArista(5, 6, 1);
-		arbol.agregarArista(3, 2, 5);
-		arbol.agregarArista(6, 4, 2);
+		arbol.agregarArista(3, 8, 4);
 		System.out.println("DFS:");
 		arbol.dephtFirstSearch(1);	
 		System.out.println();
